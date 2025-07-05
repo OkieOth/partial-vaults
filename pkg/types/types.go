@@ -10,6 +10,7 @@ const (
 	STRING
 	BOOL
 	NUMBER
+	INTEGER
 	NULL
 )
 
@@ -25,6 +26,8 @@ func (t ValueType) String() string {
 		return "Bool"
 	case NUMBER:
 		return "Number"
+	case INTEGER:
+		return "Integer"
 	case NULL:
 		return "Null"
 	default:

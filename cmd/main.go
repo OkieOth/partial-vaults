@@ -18,6 +18,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(sub.EncryptCmd)
+	rootCmd.AddCommand(sub.DecryptCmd)
 	rootCmd.AddCommand(sub.VersionCmd)
 }
 

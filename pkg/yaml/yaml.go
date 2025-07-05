@@ -39,11 +39,80 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) {
 			travers(item, keyPath, processor)
 		}
 	case yaml.ScalarNode:
-		if output, _, err := processor([]byte(node.Value), types.STRING, keyPath); err == nil {
-			node.Value = fmt.Sprintf("%v", output)
+		t, err := getValueType(node.Tag)
+		if err != nil {
+			fmt.Printf("key: %s, error: %v", keyPath, err)
+			return
+		}
+		if output, outputType, err := processor([]byte(node.Value), t, keyPath); err == nil {
+			if err := getProcessingResult(node, output, outputType); err != nil {
+				fmt.Println("Error assigning processing results, key:", keyPath, "error: ", err)
+			}
+		} else {
+			fmt.Println("Error while process input: ", node.Kind, ", key=", keyPath, "error: ", err)
 		}
 	default:
-		fmt.Println("Error while process input: ", node.Kind, ", key=", keyPath)
+		fmt.Println("Error while travers yaml, unknown node type: ", node.Kind, ", key=", keyPath)
 	}
+}
 
+func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType) error {
+	switch outputType {
+	case types.BOOL:
+		b, ok := output.(bool)
+		if !ok {
+			return fmt.Errorf("expected bool, got %T", output)
+		}
+		node.Value = fmt.Sprintf("%t", b)
+		node.Tag = "!!bool"
+
+	case types.STRING:
+		s, ok := output.(string)
+		if !ok {
+			return fmt.Errorf("expected string, got %T", output)
+		}
+		node.Value = s
+		node.Tag = "!!str"
+
+	case types.INTEGER:
+		i, ok := output.(int)
+		if !ok {
+			return fmt.Errorf("expected int, got %T", output)
+		}
+		node.Value = fmt.Sprintf("%d", i)
+		node.Tag = "!!int"
+
+	case types.NUMBER:
+		f, ok := output.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64, got %T", output)
+		}
+		node.Value = fmt.Sprintf("%v", f)
+		node.Tag = "!!float"
+
+	case types.NULL:
+		node.Value = "null"
+		node.Tag = "!!null"
+
+	default:
+		return fmt.Errorf("unsupported outputType: %v", outputType)
+	}
+	return nil
+}
+
+func getValueType(nodeTag string) (types.ValueType, error) {
+	switch nodeTag {
+	case "!!str":
+		return types.STRING, nil
+	case "!!int":
+		return types.INTEGER, nil
+	case "!!float":
+		return types.NUMBER, nil
+	case "!!bool":
+		return types.BOOL, nil
+	case "!!null":
+		return types.NULL, nil
+	default:
+		return types.NULL, fmt.Errorf("Unknown value type: %s", nodeTag)
+	}
 }

@@ -9,6 +9,8 @@ second:
         "1": one
         "2": two
     a:
+        v: true
+        w: 14
         x: ex
         y: why
         z: zee
