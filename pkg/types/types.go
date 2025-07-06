@@ -35,4 +35,12 @@ func (t ValueType) String() string {
 	}
 }
 
-type ProcessFunc func([]byte, ValueType, string) (any, ValueType, error)
+type ProcessHandling int
+
+const (
+	HANDLING_PROCESS ProcessHandling = iota
+	HANDLING_SKIP
+	HANDLING_CANCEL
+)
+
+type ProcessFunc func([]byte, ValueType, string) (any, ValueType, ProcessHandling, error)

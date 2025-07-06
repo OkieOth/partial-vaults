@@ -14,7 +14,9 @@ func ProcessYamlFile(inputFile, outputFile string, processor types.ProcessFunc) 
 		return fmt.Errorf("Error reading YAML: %v", err)
 	}
 
-	travers(root, "", processor)
+	if !travers(root, "", processor) {
+		return fmt.Errorf("Processing canceled by user")
+	}
 
 	if err := yamlreader.WriteYAML(outputFile, root); err != nil {
 		return fmt.Errorf("Error writing YAML: %v", err)
@@ -22,31 +24,41 @@ func ProcessYamlFile(inputFile, outputFile string, processor types.ProcessFunc) 
 	return nil
 }
 
-func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) {
+func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) bool {
 	switch node.Kind {
 	case yaml.DocumentNode:
 		for _, n := range node.Content {
-			travers(n, keyPath, processor)
+			if !travers(n, keyPath, processor) {
+				return false
+			}
 		}
 	case yaml.MappingNode:
 		for i := 0; i < len(node.Content); i += 2 {
 			key := node.Content[i]
 			value := node.Content[i+1]
-			travers(value, keyPath+"."+key.Value, processor)
+			if !travers(value, keyPath+"."+key.Value, processor) {
+				return false
+			}
 		}
 	case yaml.SequenceNode:
 		for _, item := range node.Content {
-			travers(item, keyPath, processor)
+			if !travers(item, keyPath, processor) {
+				return false
+			}
 		}
 	case yaml.ScalarNode:
 		t, err := getValueType(node.Tag)
 		if err != nil {
 			fmt.Printf("key: %s, error: %v", keyPath, err)
-			return
+			return false
 		}
-		if output, outputType, err := processor([]byte(node.Value), t, keyPath); err == nil {
-			if err := getProcessingResult(node, output, outputType); err != nil {
-				fmt.Println("Error assigning processing results, key:", keyPath, "error: ", err)
+		if output, outputType, handling, err := processor([]byte(node.Value), t, keyPath); err == nil {
+			if handling == types.HANDLING_PROCESS {
+				if err := getProcessingResult(node, output, outputType); err != nil {
+					fmt.Println("Error assigning processing results, key:", keyPath, "error: ", err)
+				}
+			} else if handling == types.HANDLING_CANCEL {
+				return false
 			}
 		} else {
 			fmt.Println("Error while process input: ", node.Kind, ", key=", keyPath, "error: ", err)
@@ -54,6 +66,7 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) {
 	default:
 		fmt.Println("Error while travers yaml, unknown node type: ", node.Kind, ", key=", keyPath)
 	}
+	return true
 }
 
 func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType) error {

@@ -1,8 +1,7 @@
 package sub
 
 import (
-	"fmt"
-
+	"github.com/okieoth/pvault/pkg/decrypt"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +10,12 @@ var DecryptCmd = &cobra.Command{
 	Short: "Decrypts a partial encoded JSON or YAML file",
 	Long:  "Decrypts a partial Ansible vault encoded JSON or YAML file",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Decrypt - TODO")
+		if interactive {
+			decrypt.DecryptInteractive(input, output, password, keys)
+
+		} else {
+			decrypt.Decrypt(input, output, password, keys)
+		}
 	},
 }
 

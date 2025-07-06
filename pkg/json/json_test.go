@@ -8,9 +8,9 @@ import (
 	"github.com/okieoth/pvault/pkg/types"
 )
 
-func printValue(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, error) {
+func printValue(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
 	fmt.Println("key: ", keyPath, "value: ", string(input))
-	return string(input) + "_changed", types.STRING, nil
+	return string(input) + "_changed", types.STRING, types.HANDLING_PROCESS, nil
 }
 
 func TestProcessJsonFile(t *testing.T) {
