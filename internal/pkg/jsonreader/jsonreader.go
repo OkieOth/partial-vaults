@@ -16,6 +16,55 @@ type OrderedValue struct {
 	Value interface{}
 }
 
+func (o *OrderedValue) StringValue() (string, error) {
+	if o.Type == types.STRING {
+		s, ok := o.Value.(string)
+		if !ok {
+			return "", fmt.Errorf("error while cast to string")
+		}
+		return s, nil
+	} else {
+		return "", fmt.Errorf("no string value")
+	}
+}
+
+func (o *OrderedValue) IntValue() (int64, error) {
+	if o.Type == types.INTEGER {
+		n, ok := o.Value.(json.Number)
+		if !ok {
+			return 0, fmt.Errorf("error while cast to json.Number")
+		}
+		return n.Int64()
+	} else {
+		return 0, fmt.Errorf("no int value")
+	}
+
+}
+
+func (o *OrderedValue) BoolValue() (bool, error) {
+	if o.Type == types.BOOL {
+		n, ok := o.Value.(bool)
+		if !ok {
+			return false, fmt.Errorf("error while cast to bool")
+		}
+		return n, nil
+	} else {
+		return false, fmt.Errorf("no bool value")
+	}
+}
+
+func (o *OrderedValue) NumberValue() (float64, error) {
+	if o.Type == types.NUMBER {
+		n, ok := o.Value.(json.Number)
+		if !ok {
+			return 0, fmt.Errorf("error while cast to json.Number")
+		}
+		return n.Float64()
+	} else {
+		return 0, fmt.Errorf("no number value")
+	}
+}
+
 // OrderedPair represents a single key-value pair in a JSON object
 type OrderedPair struct {
 	Key   string

@@ -7,6 +7,23 @@ import (
 	"github.com/okieoth/pvault/pkg/types"
 )
 
+func decryptImpl(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+	// switch vt {
+	// case types.STRING:
+	// 	s := string(input)
+	// 	return s, vt, types.HANDLING_PROCESS, nil
+	// case types.BOOL:
+	// 	s := string(input)
+	// 	return s, vt, types.HANDLING_PROCESS, nil
+	// case types.INTEGER:
+	//     s := fmt.Sprintf(format string, a ...any)
+	// case types.NUMBER:
+	// case types.NULL:
+	// 	return input, vt, types.HANDLING_PROCESS, nil
+	// }
+	return input, vt, types.HANDLING_PROCESS, nil // TODO
+}
+
 func Decrypt(inputFile, outputFile, password string, keys []string) error {
 	processor := func(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
 		fmt.Println("Decrypt", "key: ", keyPath, "value: ", string(input))

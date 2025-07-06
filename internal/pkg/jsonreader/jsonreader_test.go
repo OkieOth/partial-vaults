@@ -35,5 +35,4 @@ func TestJsonKeepOrder(t *testing.T) {
 	if err := os.WriteFile(outputFile, outputBytes, 0644); err != nil {
 		panic(err)
 	}
-
 }

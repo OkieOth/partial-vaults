@@ -26,3 +26,19 @@ func WriteYAML(filename string, root *yaml.Node) error {
 	}
 	return os.WriteFile(filename, data, 0644)
 }
+
+func StringValue(node *yaml.Node) (string, error) {
+
+}
+
+func IntValue(node *yaml.Node) (int, error) {
+
+}
+
+func BoolValue(node *yaml.Node) (bool, error) {
+
+}
+
+func NumberValue(node *yaml.Node) (float32, error) {
+
+}

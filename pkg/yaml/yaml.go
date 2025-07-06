@@ -53,11 +53,12 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) bool 
 			return false
 		}
 		if output, outputType, handling, err := processor([]byte(node.Value), t, keyPath); err == nil {
-			if handling == types.HANDLING_PROCESS {
+			switch handling {
+			case types.HANDLING_PROCESS:
 				if err := getProcessingResult(node, output, outputType); err != nil {
 					fmt.Println("Error assigning processing results, key:", keyPath, "error: ", err)
 				}
-			} else if handling == types.HANDLING_CANCEL {
+			case types.HANDLING_CANCEL:
 				return false
 			}
 		} else {
