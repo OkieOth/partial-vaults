@@ -34,6 +34,29 @@ func TestNumber(t *testing.T) {
 	jsonData := getJsonData(t, inputJsonFile)
 	yamlData := getYamlData(t, inputYamlFile)
 	fmt.Println(jsonData, yamlData) // TODO
+
+	v1, err := jsonData.NumberValue()
+	require.Nil(t, err)
+	require.Equal(t, v1, float64(24.71))
+
+	v2, err := yamlreader.NumberValue(yamlData)
+	require.Nil(t, err)
+
+	require.Equal(t, v1, v2)
+
+	_, err = jsonData.StringValue()
+	require.NotNil(t, err)
+	_, err = jsonData.BoolValue()
+	require.NotNil(t, err)
+	_, err = jsonData.IntValue()
+	require.NotNil(t, err) // for json specifics
+
+	_, err = yamlreader.StringValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.BoolValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.IntValue(yamlData)
+	require.NotNil(t, err)
 }
 
 func TestInteger(t *testing.T) {
@@ -41,7 +64,29 @@ func TestInteger(t *testing.T) {
 	inputYamlFile := "../../../resources/tests/integer.yaml"
 	jsonData := getJsonData(t, inputJsonFile)
 	yamlData := getYamlData(t, inputYamlFile)
-	fmt.Println(jsonData, yamlData) // TODO
+
+	v1, err := jsonData.IntValue()
+	require.Nil(t, err)
+	require.Equal(t, v1, int64(13))
+
+	v2, err := yamlreader.IntValue(yamlData)
+	require.Nil(t, err)
+
+	require.Equal(t, v1, v2)
+
+	_, err = jsonData.StringValue()
+	require.NotNil(t, err)
+	_, err = jsonData.BoolValue()
+	require.NotNil(t, err)
+	_, err = jsonData.NumberValue()
+	require.Nil(t, err) // for JSON specifics
+
+	_, err = yamlreader.StringValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.BoolValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.NumberValue(yamlData)
+	require.NotNil(t, err)
 }
 
 func TestBool(t *testing.T) {
@@ -55,12 +100,72 @@ func TestBool(t *testing.T) {
 	yamlData2 := getYamlData(t, inputYamlFile2)
 	fmt.Println(jsonData1, jsonData2, yamlData1, yamlData2) // TODO
 
+	v1, err := jsonData1.BoolValue()
+	require.Nil(t, err)
+	require.Equal(t, v1, true)
+	v2, err := yamlreader.BoolValue(yamlData1)
+	require.Nil(t, err)
+	require.Equal(t, v1, v2)
+
+	v1, err = jsonData2.BoolValue()
+	require.Nil(t, err)
+	require.Equal(t, v1, false)
+	v2, err = yamlreader.BoolValue(yamlData2)
+	require.Nil(t, err)
+	require.Equal(t, v1, v2)
+
+	_, err = jsonData1.StringValue()
+	require.NotNil(t, err)
+	_, err = jsonData1.IntValue()
+	require.NotNil(t, err)
+	_, err = jsonData1.NumberValue()
+	require.NotNil(t, err)
+	_, err = jsonData2.StringValue()
+	require.NotNil(t, err)
+	_, err = jsonData2.IntValue()
+	require.NotNil(t, err)
+	_, err = jsonData2.NumberValue()
+	require.NotNil(t, err)
+
+	_, err = yamlreader.StringValue(yamlData1)
+	require.NotNil(t, err)
+	_, err = yamlreader.IntValue(yamlData1)
+	require.NotNil(t, err)
+	_, err = yamlreader.NumberValue(yamlData1)
+	require.NotNil(t, err)
+	_, err = yamlreader.StringValue(yamlData2)
+	require.NotNil(t, err)
+	_, err = yamlreader.IntValue(yamlData2)
+	require.NotNil(t, err)
+	_, err = yamlreader.NumberValue(yamlData2)
+	require.NotNil(t, err)
 }
 
 func TestString(t *testing.T) {
 	inputJsonFile := "../../../resources/tests/string.json"
 	inputYamlFile := "../../../resources/tests/string.yaml"
 	jsonData := getJsonData(t, inputJsonFile)
-	yamlData := getJsonData(t, inputYamlFile)
+	yamlData := getYamlData(t, inputYamlFile)
 	fmt.Println(jsonData, yamlData) // TODO
+
+	v1, err := jsonData.StringValue()
+	require.Nil(t, err)
+	require.Equal(t, v1, "I am a longer text")
+	v2, err := yamlreader.StringValue(yamlData)
+	require.Nil(t, err)
+	require.Equal(t, v1, v2)
+
+	_, err = jsonData.IntValue()
+	require.NotNil(t, err)
+	_, err = jsonData.BoolValue()
+	require.NotNil(t, err)
+	_, err = jsonData.NumberValue()
+	require.NotNil(t, err)
+
+	_, err = yamlreader.IntValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.BoolValue(yamlData)
+	require.NotNil(t, err)
+	_, err = yamlreader.NumberValue(yamlData)
+	require.NotNil(t, err)
 }

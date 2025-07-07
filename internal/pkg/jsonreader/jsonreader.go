@@ -16,53 +16,80 @@ type OrderedValue struct {
 	Value interface{}
 }
 
-func (o *OrderedValue) StringValue() (string, error) {
-	if o.Type == types.STRING {
-		s, ok := o.Value.(string)
+func traversToValue[T any](o *OrderedValue, errorValue T, fn func(*OrderedValue) (T, error)) (T, error) {
+	switch o.Type {
+	case types.OBJECT:
+		orderedObject, ok := o.Value.(OrderedObject)
 		if !ok {
-			return "", fmt.Errorf("error while cast to string")
+			return errorValue, fmt.Errorf("error while cast object")
 		}
-		return s, nil
-	} else {
-		return "", fmt.Errorf("no string value")
+		return traversToValue(orderedObject[0].Value, errorValue, fn)
+	case types.BOOL, types.INTEGER, types.STRING, types.NUMBER:
+		return fn(o)
+	default:
+		return errorValue, fmt.Errorf("wrong OrderedValue type: %v", o.Type)
 	}
+}
+
+func (o *OrderedValue) StringValue() (string, error) {
+	castFn := func(ov *OrderedValue) (string, error) {
+		if ov.Type == types.STRING {
+			s, ok := ov.Value.(string)
+			if !ok {
+				return "", fmt.Errorf("error while cast to string")
+			}
+			return s, nil
+		} else {
+			return "", fmt.Errorf("no string value")
+		}
+	}
+	return traversToValue(o, "", castFn)
 }
 
 func (o *OrderedValue) IntValue() (int64, error) {
-	if o.Type == types.INTEGER {
-		n, ok := o.Value.(json.Number)
-		if !ok {
-			return 0, fmt.Errorf("error while cast to json.Number")
+	castFn := func(ov *OrderedValue) (int64, error) {
+		switch ov.Type {
+		case types.INTEGER, types.NUMBER:
+			n, ok := ov.Value.(json.Number)
+			if !ok {
+				return 0, fmt.Errorf("error while cast to json.Number")
+			}
+			return n.Int64()
+		default:
+			return 0, fmt.Errorf("no int value")
 		}
-		return n.Int64()
-	} else {
-		return 0, fmt.Errorf("no int value")
 	}
-
+	return traversToValue(o, 0, castFn)
 }
 
 func (o *OrderedValue) BoolValue() (bool, error) {
-	if o.Type == types.BOOL {
-		n, ok := o.Value.(bool)
-		if !ok {
-			return false, fmt.Errorf("error while cast to bool")
+	castFn := func(ov *OrderedValue) (bool, error) {
+		if ov.Type == types.BOOL {
+			n, ok := ov.Value.(bool)
+			if !ok {
+				return false, fmt.Errorf("error while cast to bool")
+			}
+			return n, nil
+		} else {
+			return false, fmt.Errorf("no bool value")
 		}
-		return n, nil
-	} else {
-		return false, fmt.Errorf("no bool value")
 	}
+	return traversToValue(o, false, castFn)
 }
 
 func (o *OrderedValue) NumberValue() (float64, error) {
-	if o.Type == types.NUMBER {
-		n, ok := o.Value.(json.Number)
-		if !ok {
-			return 0, fmt.Errorf("error while cast to json.Number")
+	castFn := func(ov *OrderedValue) (float64, error) {
+		if ov.Type == types.NUMBER {
+			n, ok := ov.Value.(json.Number)
+			if !ok {
+				return 0, fmt.Errorf("error while cast to json.Number")
+			}
+			return n.Float64()
+		} else {
+			return 0, fmt.Errorf("no number value")
 		}
-		return n.Float64()
-	} else {
-		return 0, fmt.Errorf("no number value")
 	}
+	return traversToValue(o, 0.0, castFn)
 }
 
 // OrderedPair represents a single key-value pair in a JSON object
