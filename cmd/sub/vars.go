@@ -13,8 +13,7 @@ func initDefaultFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&input, "input", "i", "", "Path to the input file (required)")
 	cmd.Flags().StringVarP(&output, "output", "o", "stdout", "Output to create, default is stdout")
 	cmd.MarkFlagRequired("input")
-	cmd.MarkFlagRequired("output")
 	cmd.Flags().StringSliceVarP(&keys, "key", "k", []string{}, "Keys to include in the processing. Can be given multiple times")
 	cmd.Flags().BoolVarP(&interactive, "interactive", "a", false, "Interactive mode")
-	cmd.Flags().StringVarP(&input, "passord", "p", "", "Password")
+	cmd.Flags().StringVarP(&password, "passord", "p", "", "Password")
 }

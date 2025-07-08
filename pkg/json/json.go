@@ -28,10 +28,13 @@ func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc) 
 	if err != nil {
 		return fmt.Errorf("Error while marshal output: %v", err)
 	}
-	if err := os.WriteFile(outputFile, outputBytes, 0644); err != nil {
-		return fmt.Errorf("Error while writing output file: %v", err)
+	if outputFile == "stdout" {
+		fmt.Println(string(outputBytes))
+	} else {
+		if err := os.WriteFile(outputFile, outputBytes, 0644); err != nil {
+			return fmt.Errorf("Error while writing output file: %v", err)
+		}
 	}
-
 	return nil
 }
 
@@ -50,16 +53,17 @@ func travers(val *jsonreader.OrderedValue, keyPath string, processor types.Proce
 			}
 		}
 	default:
-		out, _ := json.Marshal(val.Value)
-		if val.Type == types.STRING {
-			last := len(out) - 1
-			out = out[1:last]
+		value, t, err := val.GetValue()
+		if err != nil {
+			fmt.Printf("key: %s, error: %v", keyPath, err)
+			return false
 		}
-		if output, t, h, err := processor(out, val.Type, keyPath); err == nil {
-			if h == types.HANDLING_PROCESS {
+		if output, t, h, err := processor(value, t, keyPath); err == nil {
+			switch h {
+			case types.HANDLING_PROCESS:
 				val.Value = output
 				val.Type = t
-			} else if h == types.HANDLING_CANCEL {
+			case types.HANDLING_CANCEL:
 				return false
 			}
 		} else {

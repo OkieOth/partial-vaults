@@ -2,40 +2,46 @@ package decrypt
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/okieoth/pvault/internal/pkg/cmdbase"
+	"github.com/okieoth/pvault/internal/pkg/vaultfunc"
 	"github.com/okieoth/pvault/pkg/types"
 )
 
-func decryptImpl(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-	// switch vt {
-	// case types.STRING:
-	// 	s := string(input)
-	// 	return s, vt, types.HANDLING_PROCESS, nil
-	// case types.BOOL:
-	// 	s := string(input)
-	// 	return s, vt, types.HANDLING_PROCESS, nil
-	// case types.INTEGER:
-	//     s := fmt.Sprintf(format string, a ...any)
-	// case types.NUMBER:
-	// case types.NULL:
-	// 	return input, vt, types.HANDLING_PROCESS, nil
-	// }
-	return input, vt, types.HANDLING_PROCESS, nil // TODO
+func decryptImpl(input any, vt types.ValueType, keyPath, password string) (any, types.ValueType, types.ProcessHandling, error) {
+	if vt != types.STRING {
+		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("skip decrypt because it's no string, keyPath: %s", keyPath)
+	}
+
+	valueToDecrypt, ok := input.(string)
+	if !ok {
+		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("error while casting value to decrypt to string, keyPath: %s", keyPath)
+	}
+
+	seperator := "$ANSIBLE_VAULT;"
+	index := strings.Index(valueToDecrypt, seperator)
+	if index == -1 {
+		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("value to decrypt doesn't contain Ansible vault prefix, keyPath: %s", keyPath)
+	}
+	valueToDecrypt = valueToDecrypt[index:]
+	v, vtype, err := vaultfunc.Decrypt(valueToDecrypt, password)
+	if err != nil {
+		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("error while decrypt, keyPath: %s, err: %v", keyPath, err)
+	}
+	return v, vtype, types.HANDLING_PROCESS, nil
 }
 
 func Decrypt(inputFile, outputFile, password string, keys []string) error {
-	processor := func(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-		fmt.Println("Decrypt", "key: ", keyPath, "value: ", string(input))
-		return string(input) + "_changed", types.STRING, types.HANDLING_PROCESS, nil
+	processor := func(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+		return decryptImpl(input, vt, keyPath, password)
 	}
 	return cmdbase.CommandBase(inputFile, outputFile, processor)
 }
 
 func DecryptInteractive(inputFile, outputFile, password string, keys []string) error {
-	processor := func(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-		fmt.Println("Decrypt Interactive variant", "key: ", keyPath, "value: ", string(input))
-		return input, vt, types.HANDLING_PROCESS, nil
+	processor := func(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+		return decryptImpl(input, vt, keyPath, password)
 	}
 
 	introMsg := "This is the interactive decryption of: "

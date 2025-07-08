@@ -92,6 +92,23 @@ func (o *OrderedValue) NumberValue() (float64, error) {
 	return traversToValue(o, 0.0, castFn)
 }
 
+func (o *OrderedValue) GetValue() (any, types.ValueType, error) {
+	if b, err := o.BoolValue(); err == nil {
+		return b, types.BOOL, nil
+	}
+	if b, err := o.StringValue(); err == nil {
+		return b, types.STRING, nil
+	}
+	if b, err := o.IntValue(); err == nil {
+		return b, types.INTEGER, nil
+	}
+	if b, err := o.NumberValue(); err == nil {
+		return b, types.NUMBER, nil
+	} else {
+		return "", types.NULL, fmt.Errorf("couldn't detect value type")
+	}
+}
+
 // OrderedPair represents a single key-value pair in a JSON object
 type OrderedPair struct {
 	Key   string
@@ -163,8 +180,10 @@ func (ov *OrderedValue) MarshalJSON() ([]byte, error) {
 		return json.Marshal(ov.Value.(bool))
 	case types.NULL:
 		return []byte("null"), nil
+	case types.INTEGER:
+		return json.Marshal(ov.Value.(int64))
 	case types.NUMBER:
-		return []byte(ov.Value.(json.Number)), nil
+		return json.Marshal(ov.Value.(float64))
 	default:
 		return nil, fmt.Errorf("unknown type: %s", ov.Type)
 	}

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/okieoth/pvault/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,7 +28,13 @@ func WriteYAML(filename string, root *yaml.Node) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filename, data, 0644)
+	if filename == "stdout" {
+		fmt.Println(string(data))
+		return nil
+
+	} else {
+		return os.WriteFile(filename, data, 0644)
+	}
 }
 
 // since yaml objects are a bit nested, you have to dig deep to reach the value
@@ -117,4 +124,21 @@ func NumberValue(node *yaml.Node) (float64, error) {
 		}
 	}
 	return traversToValue(node, 0.0, castFn)
+}
+
+func GetValue(node *yaml.Node) (any, types.ValueType, error) {
+	if b, err := BoolValue(node); err == nil {
+		return b, types.BOOL, nil
+	}
+	if b, err := StringValue(node); err == nil {
+		return b, types.STRING, nil
+	}
+	if b, err := IntValue(node); err == nil {
+		return b, types.INTEGER, nil
+	}
+	if b, err := NumberValue(node); err == nil {
+		return b, types.NUMBER, nil
+	} else {
+		return "", types.NULL, fmt.Errorf("couldn't detect value type")
+	}
 }

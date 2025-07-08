@@ -47,12 +47,12 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) bool 
 			}
 		}
 	case yaml.ScalarNode:
-		t, err := getValueType(node.Tag)
+		value, t, err := yamlreader.GetValue(node)
 		if err != nil {
 			fmt.Printf("key: %s, error: %v", keyPath, err)
 			return false
 		}
-		if output, outputType, handling, err := processor([]byte(node.Value), t, keyPath); err == nil {
+		if output, outputType, handling, err := processor(value, t, keyPath); err == nil {
 			switch handling {
 			case types.HANDLING_PROCESS:
 				if err := getProcessingResult(node, output, outputType); err != nil {
@@ -89,7 +89,7 @@ func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType
 		node.Tag = "!!str"
 
 	case types.INTEGER:
-		i, ok := output.(int)
+		i, ok := output.(int64)
 		if !ok {
 			return fmt.Errorf("expected int, got %T", output)
 		}

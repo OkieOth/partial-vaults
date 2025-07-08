@@ -8,13 +8,9 @@ import (
 	"github.com/okieoth/pvault/pkg/yaml"
 )
 
-func printValue(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-	fmt.Println("key: ", keyPath, "value: ", string(input))
-	if vt == types.STRING {
-		return string(input) + "_changed", types.STRING, types.HANDLING_PROCESS, nil
-	} else {
-		return input, vt, types.HANDLING_PROCESS, nil
-	}
+func printValue(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+	fmt.Printf("key: %s, value:= %v", keyPath, input)
+	return input, vt, types.HANDLING_PROCESS, nil
 }
 
 func TestProcessJsonFile(t *testing.T) {

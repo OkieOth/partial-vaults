@@ -45,7 +45,7 @@ func NewInteractiveProcessor(inputFile, introMsg, processQuestion string, proces
 	}
 }
 
-func (ip *InteractiveProcessor) Process(input []byte, inputType types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+func (ip *InteractiveProcessor) Process(input any, inputType types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
 	if ip.first {
 		ip.first = false
 		ip.colored.Println(ip.introMsg, ip.inputFile)

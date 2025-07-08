@@ -10,6 +10,7 @@ import (
 
 	"github.com/okieoth/pvault/internal/pkg/jsonreader"
 	"github.com/okieoth/pvault/internal/pkg/yamlreader"
+	"github.com/okieoth/pvault/pkg/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -57,6 +58,16 @@ func TestNumber(t *testing.T) {
 	require.NotNil(t, err)
 	_, err = yamlreader.IntValue(yamlData)
 	require.NotNil(t, err)
+
+	vv, vt, err := yamlreader.GetValue(yamlData)
+	require.Nil(t, err)
+	require.Equal(t, types.NUMBER, vt)
+	require.Equal(t, float64(24.71), vv)
+
+	vv, vt, err = jsonData.GetValue()
+	require.Nil(t, err)
+	require.Equal(t, types.NUMBER, vt)
+	require.Equal(t, float64(24.71), vv)
 }
 
 func TestInteger(t *testing.T) {
@@ -87,6 +98,16 @@ func TestInteger(t *testing.T) {
 	require.NotNil(t, err)
 	_, err = yamlreader.NumberValue(yamlData)
 	require.NotNil(t, err)
+
+	vv, vt, err := yamlreader.GetValue(yamlData)
+	require.Nil(t, err)
+	require.Equal(t, types.INTEGER, vt)
+	require.Equal(t, int64(13), vv)
+
+	vv, vt, err = jsonData.GetValue()
+	require.Nil(t, err)
+	require.Equal(t, types.INTEGER, vt)
+	require.Equal(t, int64(13), vv)
 }
 
 func TestBool(t *testing.T) {
@@ -139,6 +160,17 @@ func TestBool(t *testing.T) {
 	require.NotNil(t, err)
 	_, err = yamlreader.NumberValue(yamlData2)
 	require.NotNil(t, err)
+
+	vv, vt, err := yamlreader.GetValue(yamlData1)
+	require.Nil(t, err)
+	require.Equal(t, types.BOOL, vt)
+	require.Equal(t, true, vv)
+
+	vv, vt, err = jsonData1.GetValue()
+	require.Nil(t, err)
+	require.Equal(t, types.BOOL, vt)
+	require.Equal(t, true, vv)
+
 }
 
 func TestString(t *testing.T) {
@@ -168,4 +200,14 @@ func TestString(t *testing.T) {
 	require.NotNil(t, err)
 	_, err = yamlreader.NumberValue(yamlData)
 	require.NotNil(t, err)
+
+	vv, vt, err := yamlreader.GetValue(yamlData)
+	require.Nil(t, err)
+	require.Equal(t, types.STRING, vt)
+	require.Equal(t, "I am a longer text", vv)
+
+	vv, vt, err = jsonData.GetValue()
+	require.Nil(t, err)
+	require.Equal(t, types.STRING, vt)
+	require.Equal(t, "I am a longer text", vv)
 }

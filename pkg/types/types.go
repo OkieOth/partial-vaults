@@ -43,4 +43,4 @@ const (
 	HANDLING_CANCEL
 )
 
-type ProcessFunc func([]byte, ValueType, string) (any, ValueType, ProcessHandling, error)
+type ProcessFunc func(any, ValueType, string) (any, ValueType, ProcessHandling, error)

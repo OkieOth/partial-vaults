@@ -1,6 +1,8 @@
 package sub
 
 import (
+	"fmt"
+
 	"github.com/okieoth/pvault/pkg/decrypt"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +16,9 @@ var DecryptCmd = &cobra.Command{
 			decrypt.DecryptInteractive(input, output, password, keys)
 
 		} else {
-			decrypt.Decrypt(input, output, password, keys)
+			if err := decrypt.Decrypt(input, output, password, keys); err != nil {
+				fmt.Println("an error occured: ", err)
+			}
 		}
 	},
 }

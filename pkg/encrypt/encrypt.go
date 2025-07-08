@@ -4,21 +4,28 @@ import (
 	"fmt"
 
 	"github.com/okieoth/pvault/internal/pkg/cmdbase"
+	"github.com/okieoth/pvault/internal/pkg/vaultfunc"
 	"github.com/okieoth/pvault/pkg/types"
 )
 
-func Encrypt(input, output, password string, keys []string) error {
-	processor := func(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-		fmt.Println("Encrypt", "key: ", keyPath, "value: ", string(input))
-		return string(input) + "_changed", types.STRING, types.HANDLING_PROCESS, nil
+func encryptImpl(input any, vt types.ValueType, keyPath, password string) (any, types.ValueType, types.ProcessHandling, error) {
+	v, err := vaultfunc.Encrypt(input, vt, password)
+	if err != nil {
+		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("error while encrypt, keyPath: %s, err: %v", keyPath, err)
 	}
-	return cmdbase.CommandBase(input, output, processor)
+	return v, types.STRING, types.HANDLING_PROCESS, nil
+}
+
+func Encrypt(inputFile, outputFile, password string, keys []string) error {
+	processor := func(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+		return encryptImpl(input, vt, keyPath, password)
+	}
+	return cmdbase.CommandBase(inputFile, outputFile, processor)
 }
 
 func EncryptInteractive(inputFile, outputFile, password string, keys []string) error {
-	processor := func(input []byte, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
-		fmt.Println("Encrypt Interactive variant", "key: ", keyPath, "value: ", string(input))
-		return input, vt, types.HANDLING_PROCESS, nil
+	processor := func(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+		return encryptImpl(input, vt, keyPath, password)
 	}
 
 	introMsg := "This is the interactive encryption of: "
