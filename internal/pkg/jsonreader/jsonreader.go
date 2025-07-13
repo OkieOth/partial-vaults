@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/okieoth/pvault/pkg/types"
 )
@@ -292,4 +293,17 @@ func PrintOrdered(val *OrderedValue, indent int) {
 		out, _ := json.Marshal(val.Value)
 		fmt.Println(string(prefix) + string(out))
 	}
+}
+
+func ReadJSON(inputFile string) (OrderedValue, error) {
+	var root OrderedValue
+	inputBytes, err := os.ReadFile(inputFile)
+	if err != nil {
+		return root, fmt.Errorf("Error while reading input file: %v", err)
+	}
+
+	if err := json.Unmarshal(inputBytes, &root); err != nil {
+		return root, fmt.Errorf("Error while unmarshal input: %v", err)
+	}
+	return root, nil
 }

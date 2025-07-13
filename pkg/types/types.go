@@ -44,3 +44,11 @@ const (
 )
 
 type ProcessFunc func(any, ValueType, string) (any, ValueType, ProcessHandling, error)
+
+func NewKeyPath(keyPath, key string) string {
+	newPath := key
+	if keyPath != "" {
+		newPath = keyPath + "." + key
+	}
+	return newPath
+}

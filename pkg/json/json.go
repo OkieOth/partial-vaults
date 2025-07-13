@@ -7,18 +7,14 @@ import (
 	"slices"
 
 	"github.com/okieoth/pvault/internal/pkg/jsonreader"
+	"github.com/okieoth/pvault/pkg/keys"
 	"github.com/okieoth/pvault/pkg/types"
 )
 
 func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc, keys []string) error {
-	inputBytes, err := os.ReadFile(inputFile)
+	root, err := jsonreader.ReadJSON(inputFile)
 	if err != nil {
-		return fmt.Errorf("Error while reading input file: %v", err)
-	}
-
-	var root jsonreader.OrderedValue
-	if err := json.Unmarshal(inputBytes, &root); err != nil {
-		return fmt.Errorf("Error while unmarshal input: %v", err)
+		return fmt.Errorf("Error while unmarshalling input: %v", err)
 	}
 
 	if !travers(&root, "", processor, keys) {
@@ -43,7 +39,7 @@ func travers(val *jsonreader.OrderedValue, keyPath string, processor types.Proce
 	switch val.Type {
 	case types.OBJECT:
 		for _, pair := range val.Value.(jsonreader.OrderedObject) {
-			if !travers(pair.Value, keyPath+"."+pair.Key, processor, keys) {
+			if !travers(pair.Value, types.NewKeyPath(keyPath, pair.Key), processor, keys) {
 				return false
 			}
 		}
@@ -76,4 +72,23 @@ func travers(val *jsonreader.OrderedValue, keyPath string, processor types.Proce
 		}
 	}
 	return true
+}
+
+func GetEncryptedKeys(root *jsonreader.OrderedValue) ([]string, error) {
+	ret := make([]string, 0)
+
+	testForEncrypted := keys.TestEncryptedProcessor()
+	f := func(input any, vt types.ValueType, keyPath string) (any, types.ValueType, types.ProcessHandling, error) {
+		_, _, handling, _ := testForEncrypted(input, vt, keyPath)
+		if handling == types.HANDLING_PROCESS {
+			ret = append(ret, keyPath)
+		}
+		return input, vt, handling, nil
+	}
+
+	if !travers(root, "", f, []string{}) {
+		return ret, fmt.Errorf("Processing canceled by user")
+	}
+
+	return ret, nil
 }

@@ -38,7 +38,7 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc, keys 
 		for i := 0; i < len(node.Content); i += 2 {
 			key := node.Content[i]
 			value := node.Content[i+1]
-			if !travers(value, keyPath+"."+key.Value, processor, keys) {
+			if !travers(value, types.NewKeyPath(keyPath, key.Value), processor, keys) {
 				return false
 			}
 		}

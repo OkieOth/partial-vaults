@@ -2,29 +2,18 @@ package decrypt
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/okieoth/pvault/internal/pkg/cmdbase"
 	"github.com/okieoth/pvault/internal/pkg/vaultfunc"
+	"github.com/okieoth/pvault/pkg/keys"
 	"github.com/okieoth/pvault/pkg/types"
 )
 
 func decryptImpl(input any, vt types.ValueType, keyPath, password string) (any, types.ValueType, types.ProcessHandling, error) {
-	if vt != types.STRING {
-		return "", types.STRING, types.HANDLING_SKIP, nil
+	encrypted, valueToDecrypt, err := keys.IsEncrypted(input, vt)
+	if !encrypted {
+		return input, vt, types.HANDLING_SKIP, err
 	}
-
-	valueToDecrypt, ok := input.(string)
-	if !ok {
-		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("error while casting value to decrypt to string, keyPath: %s", keyPath)
-	}
-
-	seperator := "$ANSIBLE_VAULT;"
-	index := strings.Index(valueToDecrypt, seperator)
-	if index == -1 {
-		return "", types.STRING, types.HANDLING_SKIP, nil
-	}
-	valueToDecrypt = valueToDecrypt[index:]
 	v, vtype, err := vaultfunc.Decrypt(valueToDecrypt, password)
 	if err != nil {
 		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("error while decrypt, keyPath: %s, err: %v", keyPath, err)

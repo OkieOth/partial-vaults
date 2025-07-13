@@ -14,12 +14,10 @@ second:
         x: ex
         y: why
         z: zee
-
 third:
     orange: fruit
     carrot: vegetable
     beef: meat
-
 fourth:
     list:
         - delta
