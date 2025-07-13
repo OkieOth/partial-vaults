@@ -11,7 +11,7 @@ import (
 
 func decryptImpl(input any, vt types.ValueType, keyPath, password string) (any, types.ValueType, types.ProcessHandling, error) {
 	if vt != types.STRING {
-		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("skip decrypt because it's no string, keyPath: %s", keyPath)
+		return "", types.STRING, types.HANDLING_SKIP, nil
 	}
 
 	valueToDecrypt, ok := input.(string)
@@ -22,7 +22,7 @@ func decryptImpl(input any, vt types.ValueType, keyPath, password string) (any, 
 	seperator := "$ANSIBLE_VAULT;"
 	index := strings.Index(valueToDecrypt, seperator)
 	if index == -1 {
-		return "", types.STRING, types.HANDLING_SKIP, fmt.Errorf("value to decrypt doesn't contain Ansible vault prefix, keyPath: %s", keyPath)
+		return "", types.STRING, types.HANDLING_SKIP, nil
 	}
 	valueToDecrypt = valueToDecrypt[index:]
 	v, vtype, err := vaultfunc.Decrypt(valueToDecrypt, password)
