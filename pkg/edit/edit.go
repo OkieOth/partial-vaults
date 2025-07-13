@@ -20,7 +20,7 @@ func EditInteractive(inputFile, outputFile, password string, keys []string) erro
 
 	introMsg := "This is the interactive edit of: "
 	processQuestion := "Edit value?"
-	interactiveProcessor := InteractiveEditProcessor(inputFile, introMsg, processQuestion, decryptProcessor, encryptProcessor)
+	interactiveProcessor := InteractiveEditProcessor(introMsg, processQuestion, inputFile, decryptProcessor, encryptProcessor)
 	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor)
 }
 

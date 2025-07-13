@@ -15,5 +15,5 @@ var EditCmd = &cobra.Command{
 }
 
 func init() {
-	initDefaultFlags(EncryptCmd)
+	initDefaultFlags(EditCmd)
 }
