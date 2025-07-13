@@ -13,7 +13,7 @@ func printValue(input any, vt types.ValueType, keyPath string) (any, types.Value
 	return input, vt, types.HANDLING_PROCESS, nil
 }
 
-func TestProcessJsonFile(t *testing.T) {
+func TestProcessYamlFile(t *testing.T) {
 	inputFile := "../../resources/tests/example.yaml"
 	outputFile := "../../temp/example_output.yaml"
 	yaml.ProcessYamlFile(inputFile, outputFile, printValue)

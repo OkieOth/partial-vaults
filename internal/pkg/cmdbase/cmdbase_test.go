@@ -11,6 +11,7 @@ import (
 	"github.com/okieoth/pvault/internal/pkg/jsonreader"
 	"github.com/okieoth/pvault/internal/pkg/yamlreader"
 	"github.com/okieoth/pvault/pkg/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -210,4 +211,55 @@ func TestString(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, types.STRING, vt)
 	require.Equal(t, "I am a longer text", vv)
+}
+
+func TestClosure(t *testing.T) {
+	var counter int
+
+	f := func() {
+		counter++
+		//fmt.Println("counter:", counter)
+	}
+
+	for _ = range 10 {
+		f()
+	}
+	require.Equal(t, 10, counter)
+}
+
+func sophisticatedFunc(start int) func() int {
+	counter := start
+	return func() int {
+		counter++
+		return counter
+	}
+}
+
+func TestClosure2(t *testing.T) {
+	tests := []struct {
+		start     int
+		loopCount int
+	}{
+		{
+			start:     0,
+			loopCount: 10,
+		},
+		{
+			start:     10,
+			loopCount: 10,
+		},
+		{
+			start:     -5,
+			loopCount: 10,
+		},
+	}
+
+	for _, test := range tests {
+		var r int
+		f := sophisticatedFunc(test.start)
+		for _ = range test.loopCount {
+			r = f()
+		}
+		assert.Equal(t, test.loopCount+test.start, r)
+	}
 }

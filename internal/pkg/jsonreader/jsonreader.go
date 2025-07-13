@@ -183,7 +183,11 @@ func (ov *OrderedValue) MarshalJSON() ([]byte, error) {
 	case types.INTEGER:
 		return json.Marshal(ov.Value.(int64))
 	case types.NUMBER:
-		return json.Marshal(ov.Value.(float64))
+		if n, ok := ov.Value.(float64); ok {
+			return json.Marshal(n)
+		}
+		// risky - can throw error, but better to detect with a verbose output
+		return json.Marshal(ov.Value.(json.Number))
 	default:
 		return nil, fmt.Errorf("unknown type: %s", ov.Type)
 	}

@@ -82,3 +82,13 @@ func TestYamlRead(t *testing.T) {
 		os.Exit(1)
 	}
 }
+
+func TestYamlBlock(t *testing.T) {
+	inputFile := "../../../resources/tests/block.yaml"
+	//outputFile := "../../../temp/block_output.yaml"
+	_, err := readYAML(inputFile)
+	if err != nil {
+		fmt.Println("Error reading YAML:", err)
+		os.Exit(1)
+	}
+}

@@ -37,14 +37,20 @@ func Decrypt(value, password string) (any, types.ValueType, error) {
 	if err != nil {
 		return "", types.STRING, fmt.Errorf("error while decrypting value")
 	}
-	if i, err := strconv.ParseInt(decrypted, 10, 64); err == nil {
-		return i, types.INTEGER, nil
+	v, vt := InputType(decrypted)
+	return v, vt, nil
+}
+
+func InputType(value string) (any, types.ValueType) {
+	if i, err := strconv.ParseInt(value, 10, 64); err == nil {
+		return i, types.INTEGER
 	}
-	if b, err := strconv.ParseBool(decrypted); err == nil {
-		return b, types.BOOL, nil
+	if b, err := strconv.ParseBool(value); err == nil {
+		return b, types.BOOL
 	}
-	if f, err := strconv.ParseFloat(decrypted, 64); err == nil {
-		return f, types.NUMBER, nil
+	if f, err := strconv.ParseFloat(value, 64); err == nil {
+		return f, types.NUMBER
 	}
-	return decrypted, types.STRING, nil
+	return value, types.STRING
+
 }

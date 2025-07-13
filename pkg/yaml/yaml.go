@@ -2,6 +2,7 @@ package yaml
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/okieoth/pvault/internal/pkg/yamlreader"
 	"github.com/okieoth/pvault/pkg/types"
@@ -78,6 +79,7 @@ func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType
 			return fmt.Errorf("expected bool, got %T", output)
 		}
 		node.Value = fmt.Sprintf("%t", b)
+		node.Style = 0
 		node.Tag = "!!bool"
 
 	case types.STRING:
@@ -86,6 +88,12 @@ func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType
 			return fmt.Errorf("expected string, got %T", output)
 		}
 		node.Value = s
+		if strings.Contains(s, "\n") {
+			node.Style = yaml.LiteralStyle
+		} else {
+			node.Style = 0
+		}
+
 		node.Tag = "!!str"
 
 	case types.INTEGER:
@@ -94,6 +102,7 @@ func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType
 			return fmt.Errorf("expected int, got %T", output)
 		}
 		node.Value = fmt.Sprintf("%d", i)
+		node.Style = 0
 		node.Tag = "!!int"
 
 	case types.NUMBER:
@@ -102,10 +111,12 @@ func getProcessingResult(node *yaml.Node, output any, outputType types.ValueType
 			return fmt.Errorf("expected float64, got %T", output)
 		}
 		node.Value = fmt.Sprintf("%v", f)
+		node.Style = 0
 		node.Tag = "!!float"
 
 	case types.NULL:
 		node.Value = "null"
+		node.Style = 0
 		node.Tag = "!!null"
 
 	default:
