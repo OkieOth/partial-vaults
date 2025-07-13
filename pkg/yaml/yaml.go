@@ -2,6 +2,7 @@ package yaml
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/okieoth/pvault/internal/pkg/yamlreader"
@@ -9,13 +10,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func ProcessYamlFile(inputFile, outputFile string, processor types.ProcessFunc) error {
+func ProcessYamlFile(inputFile, outputFile string, processor types.ProcessFunc, keys []string) error {
 	root, err := yamlreader.ReadYAML(inputFile)
 	if err != nil {
 		return fmt.Errorf("Error reading YAML: %v", err)
 	}
 
-	if !travers(root, "", processor) {
+	if !travers(root, "", processor, keys) {
 		return fmt.Errorf("Processing canceled by user")
 	}
 
@@ -25,11 +26,11 @@ func ProcessYamlFile(inputFile, outputFile string, processor types.ProcessFunc) 
 	return nil
 }
 
-func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) bool {
+func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc, keys []string) bool {
 	switch node.Kind {
 	case yaml.DocumentNode:
 		for _, n := range node.Content {
-			if !travers(n, keyPath, processor) {
+			if !travers(n, keyPath, processor, keys) {
 				return false
 			}
 		}
@@ -37,17 +38,20 @@ func travers(node *yaml.Node, keyPath string, processor types.ProcessFunc) bool 
 		for i := 0; i < len(node.Content); i += 2 {
 			key := node.Content[i]
 			value := node.Content[i+1]
-			if !travers(value, keyPath+"."+key.Value, processor) {
+			if !travers(value, keyPath+"."+key.Value, processor, keys) {
 				return false
 			}
 		}
 	case yaml.SequenceNode:
 		for _, item := range node.Content {
-			if !travers(item, keyPath, processor) {
+			if !travers(item, keyPath, processor, keys) {
 				return false
 			}
 		}
 	case yaml.ScalarNode:
+		if len(keys) > 0 && (!slices.Contains(keys, keyPath)) {
+			break
+		}
 		value, t, err := yamlreader.GetValue(node)
 		if err != nil {
 			fmt.Printf("key: %s, error: %v", keyPath, err)

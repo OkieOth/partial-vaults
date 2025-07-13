@@ -18,6 +18,6 @@ func TestBlocks(t *testing.T) {
 		return decrypt.DecryptImpl(input, vt, keyPath, password)
 	}
 
-	err := yaml.ProcessYamlFile(inputFile, outputFile, processor)
+	err := yaml.ProcessYamlFile(inputFile, outputFile, processor, []string{})
 	require.Nil(t, err)
 }

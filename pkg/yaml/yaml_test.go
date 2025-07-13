@@ -16,5 +16,5 @@ func printValue(input any, vt types.ValueType, keyPath string) (any, types.Value
 func TestProcessYamlFile(t *testing.T) {
 	inputFile := "../../resources/tests/example.yaml"
 	outputFile := "../../temp/example_output.yaml"
-	yaml.ProcessYamlFile(inputFile, outputFile, printValue)
+	yaml.ProcessYamlFile(inputFile, outputFile, printValue, []string{})
 }

@@ -21,7 +21,7 @@ func EditInteractive(inputFile, outputFile, password string, keys []string) erro
 	introMsg := "This is the interactive edit of: "
 	processQuestion := "Edit value?"
 	interactiveProcessor := InteractiveEditProcessor(introMsg, processQuestion, inputFile, decryptProcessor, encryptProcessor)
-	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor)
+	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor, keys)
 }
 
 func InteractiveEditProcessor(introMsg, processQuestion, inputFile string, decryptProcessor, encryptProcessor types.ProcessFunc) types.ProcessFunc {
@@ -34,9 +34,9 @@ func InteractiveEditProcessor(introMsg, processQuestion, inputFile string, decry
 			colored.Println(introMsg, inputFile)
 			colored.Println("('y' - takes the suggestion (default), 'n' - rejects the suggestion, 'c' - cancel processing)")
 		}
-		decryptedInput, valueType, _, err := decryptProcessor(input, inputType, keyPath)
-		if err != nil {
-			return decryptedInput, valueType, types.HANDLING_CANCEL, fmt.Errorf("error while decrypting value, key=%s: %v", keyPath, err)
+		decryptedInput, valueType, handling, _ := decryptProcessor(input, inputType, keyPath)
+		if handling != types.HANDLING_SKIP {
+			return input, valueType, types.HANDLING_SKIP, nil
 		}
 		fmt.Println()
 		colored.Print("key: ")

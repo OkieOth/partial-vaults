@@ -13,12 +13,12 @@ import (
 	"github.com/okieoth/pvault/pkg/yaml"
 )
 
-func CommandBase(input, output string, processor types.ProcessFunc) error {
+func CommandBase(input, output string, processor types.ProcessFunc, keys []string) error {
 	var e error
 	if t := typedetect.IfNotJsonOrYamlThenPanic(input); t == typedetect.INPUT_JSON {
-		e = json.ProcessJsonFile(input, output, processor)
+		e = json.ProcessJsonFile(input, output, processor, keys)
 	} else {
-		e = yaml.ProcessYamlFile(input, output, processor)
+		e = yaml.ProcessYamlFile(input, output, processor, keys)
 	}
 	return e
 }

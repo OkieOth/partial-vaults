@@ -33,7 +33,7 @@ func decryptImpl(input any, vt types.ValueType, keyPath, password string) (any, 
 }
 
 func Decrypt(inputFile, outputFile, password string, keys []string) error {
-	return cmdbase.CommandBase(inputFile, outputFile, DecryptProcessor(password))
+	return cmdbase.CommandBase(inputFile, outputFile, DecryptProcessor(password), keys)
 }
 
 func DecryptProcessor(password string) types.ProcessFunc {
@@ -46,5 +46,5 @@ func DecryptInteractive(inputFile, outputFile, password string, keys []string) e
 	introMsg := "This is the interactive decryption of: "
 	processQuestion := "Decrypt value?"
 	interactiveProcessor := cmdbase.InteractiveProcessor(inputFile, introMsg, processQuestion, DecryptProcessor(password))
-	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor)
+	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor, keys)
 }

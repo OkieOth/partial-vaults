@@ -16,5 +16,5 @@ func printValue(input any, vt types.ValueType, keyPath string) (any, types.Value
 func TestProcessJsonFile(t *testing.T) {
 	inputFile := "../../resources/tests/example.json"
 	outputFile := "../../temp/example_output2.json"
-	json.ProcessJsonFile(inputFile, outputFile, printValue)
+	json.ProcessJsonFile(inputFile, outputFile, printValue, []string{})
 }

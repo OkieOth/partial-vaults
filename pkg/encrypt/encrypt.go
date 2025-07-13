@@ -17,7 +17,7 @@ func encryptImpl(input any, vt types.ValueType, keyPath, password string) (any, 
 }
 
 func Encrypt(inputFile, outputFile, password string, keys []string) error {
-	return cmdbase.CommandBase(inputFile, outputFile, EncryptProcessor(password))
+	return cmdbase.CommandBase(inputFile, outputFile, EncryptProcessor(password), keys)
 }
 
 func EncryptProcessor(password string) types.ProcessFunc {
@@ -30,5 +30,5 @@ func EncryptInteractive(inputFile, outputFile, password string, keys []string) e
 	introMsg := "This is the interactive encryption of: "
 	processQuestion := "Encrypt value?"
 	interactiveProcessor := cmdbase.InteractiveProcessor(inputFile, introMsg, processQuestion, EncryptProcessor(password))
-	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor)
+	return cmdbase.CommandBase(inputFile, outputFile, interactiveProcessor, keys)
 }

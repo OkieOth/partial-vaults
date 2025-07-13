@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/okieoth/pvault/internal/pkg/jsonreader"
 	"github.com/okieoth/pvault/pkg/types"
 )
 
-func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc) error {
+func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc, keys []string) error {
 	inputBytes, err := os.ReadFile(inputFile)
 	if err != nil {
 		return fmt.Errorf("Error while reading input file: %v", err)
@@ -20,7 +21,7 @@ func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc) 
 		return fmt.Errorf("Error while unmarshal input: %v", err)
 	}
 
-	if !travers(&root, "", processor) {
+	if !travers(&root, "", processor, keys) {
 		return fmt.Errorf("Processing canceled by user")
 	}
 
@@ -38,21 +39,24 @@ func ProcessJsonFile(inputFile, outputFile string, processor types.ProcessFunc) 
 	return nil
 }
 
-func travers(val *jsonreader.OrderedValue, keyPath string, processor types.ProcessFunc) bool {
+func travers(val *jsonreader.OrderedValue, keyPath string, processor types.ProcessFunc, keys []string) bool {
 	switch val.Type {
 	case types.OBJECT:
 		for _, pair := range val.Value.(jsonreader.OrderedObject) {
-			if !travers(pair.Value, keyPath+"."+pair.Key, processor) {
+			if !travers(pair.Value, keyPath+"."+pair.Key, processor, keys) {
 				return false
 			}
 		}
 	case types.ARRAY:
 		for _, v := range val.Value.(jsonreader.OrderedArray) {
-			if !travers(v, keyPath, processor) {
+			if !travers(v, keyPath, processor, keys) {
 				return false
 			}
 		}
 	default:
+		if len(keys) > 0 && (!slices.Contains(keys, keyPath)) {
+			break
+		}
 		value, t, err := val.GetValue()
 		if err != nil {
 			fmt.Printf("key: %s, error: %v", keyPath, err)
