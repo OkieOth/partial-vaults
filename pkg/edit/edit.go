@@ -35,7 +35,7 @@ func InteractiveEditProcessor(introMsg, processQuestion, inputFile string, decry
 			colored.Println("('y' - takes the suggestion (default), 'n' - rejects the suggestion, 'c' - cancel processing)")
 		}
 		decryptedInput, valueType, handling, _ := decryptProcessor(input, inputType, keyPath)
-		if handling != types.HANDLING_SKIP {
+		if handling == types.HANDLING_SKIP {
 			return input, valueType, types.HANDLING_SKIP, nil
 		}
 		fmt.Println()

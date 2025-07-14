@@ -35,7 +35,7 @@ func Decrypt(value, password string) (any, types.ValueType, error) {
 	valToDecode := value[index:]
 	decrypted, err := vault.Decrypt(valToDecode, password)
 	if err != nil {
-		return "", types.STRING, fmt.Errorf("error while decrypting value")
+		return "", types.STRING, fmt.Errorf("error while decrypting value: %v", err)
 	}
 	v, vt := InputType(decrypted)
 	return v, vt, nil
