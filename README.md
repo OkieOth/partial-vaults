@@ -1,4 +1,4 @@
-[![CI](https://github.com/OkieOth/partial-vaults/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/OkieOth/partial-vaults/actions/workflows/ci.yml)
+[![CI](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml)
 [![go report card](https://goreportcard.com/badge/github.com/OkieOth/partial-vaults)](https://goreportcard.com/report/github.com/OkieOth/partial-vaults)
 
 # partial-vaults
