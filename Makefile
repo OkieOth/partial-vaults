@@ -8,6 +8,11 @@ build:
 
 build-docker:
 	docker build -f Dockerfile.release -t ghcr.io/okieoth/pvault:$(VERSION) .
+	docker tag ghcr.io/okieoth/pvault:$(VERSION) docker tag ghcr.io/okieoth/pvault
+
+build-publish:
+	docker publish ghcr.io/okieoth/pvault:$(VERSION)
+	docker publish ghcr.io/okieoth/pvault
 
 test:
 	go test ./... && echo ":)" || echo ":-/"
