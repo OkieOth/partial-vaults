@@ -43,25 +43,9 @@ func InteractiveEditProcessor(introMsg, processQuestion, inputFile string, decry
 		fmt.Print(keyPath)
 		colored.Print(", value: ")
 		fmt.Printf("%v\n", decryptedInput)
-		colored.Printf("%s [y|n|(C)ancel]: ", processQuestion)
+		colored.Print("New value ⏎: ")
 		reader := bufio.NewReader(os.Stdin)
-		for {
-			stdinInput, err := reader.ReadString('\n')
-			if err != nil {
-				return input, inputType, types.HANDLING_PROCESS, fmt.Errorf("Error while reading input: %v", err)
-			}
-			trimmedInput := strings.TrimSpace(stdinInput)
-			switch trimmedInput {
-			case "Y", "y", "yes", "Yes", "":
-				return readNewValueAndEncryptIt(reader, colored, encryptProcessor, keyPath)
-			case "N", "n", "no", "No":
-				return input, inputType, types.HANDLING_SKIP, nil
-			case "c", "C":
-				return input, inputType, types.HANDLING_CANCEL, nil
-			default:
-				colored.Println("WRONG INPUT! Only [y|n|c] are allowed!")
-			}
-		}
+		return readNewValueAndEncryptIt(reader, colored, encryptProcessor, keyPath)
 	}
 }
 

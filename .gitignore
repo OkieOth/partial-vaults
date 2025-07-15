@@ -29,3 +29,5 @@ go.work.sum
 
 temp
 *__debug_bin*
+
+build
