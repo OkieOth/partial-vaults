@@ -1,4 +1,4 @@
-# v0.2.2
+# v0.2.4
 
 - improvements in releasing docker images
 
