@@ -11,8 +11,8 @@ build-docker:
 	docker tag ghcr.io/okieoth/pvault:$(VERSION) ghcr.io/okieoth/pvault:latest
 
 docker-publish:
-	docker publish ghcr.io/okieoth/pvault:$(VERSION)
-	docker publish ghcr.io/okieoth/pvault
+	docker push ghcr.io/okieoth/pvault:$(VERSION)
+	docker push ghcr.io/okieoth/pvault
 
 test:
 	go test ./... && echo ":)" || echo ":-/"
