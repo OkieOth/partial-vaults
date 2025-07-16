@@ -1,3 +1,6 @@
+# v0.2.10
+- fix docker publish ... again :-/
+
 # v0.2.9
 - fixed docker publish
 
