@@ -32,10 +32,6 @@ jobs:
                       ref: `refs/tags/${process.env.TAG_NAME}`,
                       sha: context.sha
                       })
-    build:
-        name: Create Release
-        runs-on: ubuntu-latest
-        steps:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: Create GitHub Release
