@@ -17,7 +17,7 @@ var DecryptCmd = &cobra.Command{
 
 		} else {
 			if err := decrypt.Decrypt(input, output, password, keys); err != nil {
-				fmt.Println("an error occured: ", err)
+				fmt.Println("an error occurred: ", err)
 			}
 		}
 	},

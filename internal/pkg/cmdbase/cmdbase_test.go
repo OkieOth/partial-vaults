@@ -221,7 +221,7 @@ func TestClosure(t *testing.T) {
 		//fmt.Println("counter:", counter)
 	}
 
-	for _ = range 10 {
+	for range 10 {
 		f()
 	}
 	require.Equal(t, 10, counter)
@@ -257,7 +257,7 @@ func TestClosure2(t *testing.T) {
 	for _, test := range tests {
 		var r int
 		f := sophisticatedFunc(test.start)
-		for _ = range test.loopCount {
+		for range test.loopCount {
 			r = f()
 		}
 		assert.Equal(t, test.loopCount+test.start, r)

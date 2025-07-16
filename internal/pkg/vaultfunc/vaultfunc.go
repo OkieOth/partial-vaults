@@ -27,8 +27,8 @@ func Encrypt(value any, valueType types.ValueType, password string) (string, err
 }
 
 func Decrypt(value, password string) (any, types.ValueType, error) {
-	seperator := "$ANSIBLE_VAULT;"
-	index := strings.Index(value, seperator)
+	separator := "$ANSIBLE_VAULT;"
+	index := strings.Index(value, separator)
 	if index == -1 {
 		return "", types.STRING, fmt.Errorf("value doesn't contain Ansible vault prefix")
 	}
