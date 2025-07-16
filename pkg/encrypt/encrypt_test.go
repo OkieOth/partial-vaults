@@ -64,10 +64,12 @@ func TestEncryptYaml(t *testing.T) {
 		_, err = os.Stat(test.outputFile)
 		require.Nil(t, err)
 		err = decrypt.Decrypt(test.outputFile, test.tmpFile, test.password, test.keys)
+		require.Nil(t, err)
 
 		outputYaml, err := yamlreader.ReadYAML(test.tmpFile)
 		require.Nil(t, err)
 		inputYaml, err := yamlreader.ReadYAML(test.inputFile)
+		require.Nil(t, err)
 		require.Equal(t, inputYaml, outputYaml, "yaml: encrypted + decrypted doesn't mach input")
 	}
 }
@@ -123,10 +125,12 @@ func TestEncryptJson(t *testing.T) {
 		_, err = os.Stat(test.outputFile)
 		require.Nil(t, err)
 		err = decrypt.Decrypt(test.outputFile, test.tmpFile, test.password, test.keys)
+		require.Nil(t, err)
 
 		tmpJson, err := jsonreader.ReadJSON(test.tmpFile)
 		require.Nil(t, err)
 		inputJson, err := jsonreader.ReadJSON(test.inputFile)
+		require.Nil(t, err)
 		require.Equal(t, inputJson, tmpJson, "json: encrypted + decrypted doesn't mach input")
 
 		outputJson, err := jsonreader.ReadJSON(test.outputFile)
@@ -137,6 +141,7 @@ func TestEncryptJson(t *testing.T) {
 		referenceJson, err := jsonreader.ReadJSON(test.referenceFile)
 		require.Nil(t, err)
 		encryptedKeys2, err := json.GetEncryptedKeys(&referenceJson)
+		require.Nil(t, err)
 		require.Equal(t, encryptedKeys1, encryptedKeys2, "json: encrypted doesn't mach input")
 	}
 }

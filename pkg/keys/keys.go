@@ -17,8 +17,8 @@ func IsEncrypted(input any, vt types.ValueType) (bool, string, error) {
 		return false, "", fmt.Errorf("error while casting value to decrypt to string")
 	}
 
-	seperator := "$ANSIBLE_VAULT;"
-	index := strings.Index(valueToDecrypt, seperator)
+	separator := "$ANSIBLE_VAULT;"
+	index := strings.Index(valueToDecrypt, separator)
 	if index == -1 {
 		return false, valueToDecrypt, nil
 	}

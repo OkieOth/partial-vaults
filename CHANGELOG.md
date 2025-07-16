@@ -1,6 +1,8 @@
-# v0.2.6
+# v0.2.8
 
 - improvements in releasing docker images
+- badges for the README
+- fix issues reported by goreportcard
 
 # v0.2.2
 
