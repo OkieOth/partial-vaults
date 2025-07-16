@@ -2,6 +2,10 @@
 
 - improvements in releasing docker images
 
+# v0.2.2
+
+- improvements in releasing docker images
+
 # v0.2.1
 
 - improvements in releasing docker images
