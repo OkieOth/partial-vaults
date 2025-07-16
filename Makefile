@@ -8,7 +8,7 @@ build:
 
 build-docker:
 	docker build -f Dockerfile.release -t ghcr.io/okieoth/pvault:$(VERSION) .
-	docker tag ghcr.io/okieoth/pvault:$(VERSION) docker tag ghcr.io/okieoth/pvault:latest
+	docker tag ghcr.io/okieoth/pvault:$(VERSION) ghcr.io/okieoth/pvault:latest
 
 build-publish:
 	docker publish ghcr.io/okieoth/pvault:$(VERSION)
