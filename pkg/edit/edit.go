@@ -16,7 +16,7 @@ import (
 
 func EditInteractive(inputFile, outputFile, password string, keys []string) error {
 	decryptProcessor := decrypt.DecryptProcessor(password)
-	encryptProcessor := encrypt.EncryptProcessor(password)
+	encryptProcessor := encrypt.EncryptProcessor(password) // TODO
 
 	introMsg := "This is the interactive edit of: "
 	processQuestion := "Edit value?"

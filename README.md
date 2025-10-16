@@ -1,6 +1,5 @@
-[![CI](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml)
-[![go report card](https://goreportcard.com/badge/github.com/OkieOth/partial-vaults)](https://goreportcard.com/report/github.com/OkieOth/partial-vaults)
-[![GitHub release](https://img.shields.io/github/v/release/OkieOth/partial-vaults?label=Docker%20Image&style=flat-square)](https://github.com/OkieOth/partial-vaults/releases)
+![WIP](https://img.shields.io/badge/work%20in%20progress-red)
+
 # partial-vaults
 
 A tool to encrypt or decrypt JSON or YAML files that contain partial Ansible vault encrypted values.

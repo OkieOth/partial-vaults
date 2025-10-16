@@ -68,6 +68,20 @@ func StringValue(node *yaml.Node) (string, error) {
 	return traversToValue(node, "", castFn)
 }
 
+func AnsibleVaultValue(node *yaml.Node) (string, error) {
+	if node == nil {
+		return "", fmt.Errorf("no node given")
+	}
+	castFn := func(node *yaml.Node) (string, error) {
+		if node.Tag == "!vault" {
+			return node.Value, nil
+		} else {
+			return "", fmt.Errorf("no ansible vault value")
+		}
+	}
+	return traversToValue(node, "", castFn)
+}
+
 func IntValue(node *yaml.Node) (int64, error) {
 	if node == nil {
 		return 0, fmt.Errorf("no node given")
@@ -138,6 +152,8 @@ func GetValue(node *yaml.Node) (any, types.ValueType, error) {
 	}
 	if b, err := NumberValue(node); err == nil {
 		return b, types.NUMBER, nil
+	} else if b, err := AnsibleVaultValue(node); err == nil {
+		return b, types.STRING, nil
 	} else {
 		return "", types.NULL, fmt.Errorf("couldn't detect value type")
 	}

@@ -14,43 +14,40 @@ import (
 
 func TestEncryptYaml(t *testing.T) {
 	tests := []struct {
-		inputFile     string
-		outputFile    string
-		referenceFile string
-		tmpFile       string
-		password      string
-		keys          []string
+		inputFile  string
+		outputFile string
+		tmpFile    string
+		password   string
+		keys       []string
 	}{
-		{
-			inputFile:     "../../resources/tests/example.yaml",
-			outputFile:    "../../temp/example_encrypted_01.yaml",
-			referenceFile: "../../temp/example_encrypted_tmp_01.yaml",
-			tmpFile:       "../../temp/example_encrypted_tmp_01.yaml",
-			password:      "test999",
-			keys:          []string{},
-		},
-		{
-			inputFile:     "../../resources/tests/example.yaml",
-			outputFile:    "../../temp/example_encrypted_03.yaml",
-			referenceFile: "../../temp/example_encrypted_tmp_03.yaml",
-			tmpFile:       "../../temp/example_encrypted_tmp_03.yaml",
-			password:      "test999",
-			keys:          []string{"third.carrot"},
-		},
 		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_04.yaml",
-		// 	referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_04.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{"first.a", "first.z", "second.b.2", "fourth.list"},
-		// },
-		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example_02.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_02.yaml",
-		// 	referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_01.yaml",
+		// 	inputFile:     "../../resources/tests/example.yaml",
+		// 	outputFile:    "../../temp/example_encrypted_01.yaml",
+		// 	tmpFile:       "../../temp/example_encrypted_tmp_01.yaml",
 		// 	password:      "test999",
 		// 	keys:          []string{},
 		// },
+		// {
+		// 	inputFile:     "../../resources/tests/example.yaml",
+		// 	outputFile:    "../../temp/example_encrypted_03.yaml",
+		// 	tmpFile:       "../../temp/example_encrypted_tmp_03.yaml",
+		// 	password:      "test999",
+		// 	keys:          []string{"third.carrot"},
+		// },
+		// {
+		// 	inputFile:     "../../resources/tests/partial_encrypted_example.yaml",
+		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_04.yaml",
+		// 	tmpFile:       "../../temp/partial_encrypted_example_decrypted_04_02.yaml",
+		// 	password:      "test999",
+		// 	keys:          []string{"first.a", "first.z", "second.b.2", "fourth.list"},
+		// },
+		{
+			inputFile:  "../../resources/tests/example.yaml",
+			outputFile: "../../temp/example_encrypted_01_02.yaml",
+			tmpFile:    "../../temp/example_encrypted_01_02_decrypted.yaml",
+			password:   "test999",
+			keys:       []string{},
+		},
 	}
 	for _, test := range tests {
 		if _, err := os.Stat(test.outputFile); err == nil {
@@ -91,27 +88,6 @@ func TestEncryptJson(t *testing.T) {
 			password:      "test999",
 			keys:          []string{},
 		},
-		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_03.yaml",
-		// 	referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_03.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{"third.carrot"},
-		// },
-		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_04.yaml",
-		// 	referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_04.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{"first.a", "first.z", "second.b.2", "fourth.list"},
-		// },
-		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example_02.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_02.yaml",
-		// 	referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_01.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{},
-		// },
 	}
 	for _, test := range tests {
 		if _, err := os.Stat(test.outputFile); err == nil {

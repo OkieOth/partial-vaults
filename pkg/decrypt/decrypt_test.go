@@ -61,6 +61,13 @@ func TestDecryptYaml(t *testing.T) {
 			password:      "test999",
 			keys:          []string{},
 		},
+		{
+			inputFile:     "../../resources/tests/partial_encrypted_example_03.yaml",
+			outputFile:    "../../temp/partial_encrypted_example_decrypted_03.yaml",
+			referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_01.yaml",
+			password:      "test999",
+			keys:          []string{},
+		},
 	}
 	for _, test := range tests {
 		if _, err := os.Stat(test.outputFile); err == nil {
@@ -113,6 +120,13 @@ func TestDecryptJson(t *testing.T) {
 		{
 			inputFile:     "../../resources/tests/partial_encrypted_example_02.json",
 			outputFile:    "../../temp/partial_encrypted_example_decrypted_02.json",
+			referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_01.json",
+			password:      "test999",
+			keys:          []string{},
+		},
+		{
+			inputFile:     "../../resources/tests/partial_encrypted_example_03.json",
+			outputFile:    "../../temp/partial_encrypted_example_decrypted_03.json",
 			referenceFile: "../../resources/tests/partial_encrypted_example_decrypted_01.json",
 			password:      "test999",
 			keys:          []string{},
