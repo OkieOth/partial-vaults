@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/okieoth/ic0bra"
 	"github.com/okieoth/pvault/cmd/sub"
 )
 
@@ -13,7 +14,13 @@ var rootCmd = &cobra.Command{
 	Short: "Tool to partial encrypt and decrypt JSON or YAML files",
 	Long:  `Tool to partial encrypt and decrypt JSON or YAML files, compatible to Ansible Vault spec.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Please call this with one of the provided sub-commands")
+		if cmdToCall, err := ic0bra.RunInteractiveWithHistory(cmd, "pvault"); err == nil {
+			if cmdToCall != nil {
+				cmdToCall.Run(cmdToCall, args)
+			}
+		} else {
+			fmt.Println("error while running in interactive mode:", err)
+		}
 	},
 }
 
