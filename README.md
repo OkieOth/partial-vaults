@@ -1,4 +1,6 @@
-![WIP](https://img.shields.io/badge/work%20in%20progress-red)
+[![ci](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/OkieOth/partial-vaults/actions/workflows/test.yml)
+[![go report card](https://goreportcard.com/badge/github.com/OkieOth/partial-vaults)](https://goreportcard.com/report/github.com/OkieOth/partial-vaults)
+[![GitHub release](https://img.shields.io/github/v/release/OkieOth/partial-vaults?label=Docker%20Image&style=flat-square)](https://github.com/OkieOth/partial-vaults/releases)
 
 # partial-vaults
 
@@ -15,6 +17,12 @@ partial-vaults allows you to work with files that have a mix of plain text and A
 
 ## Usage
 
+![Demo](./docs/pvault_encoding.gif)
+
+```bash
+# discover the provided flags our use the interactive mode
+go run cmd/main.go --help
+```
 
 ## Build
 
