@@ -25,6 +25,7 @@ const (
 )
 
 const lineBreak string = "|-"
+const vaultStr string = "!vault"
 const ansibleLineBreak string = "!vault |-"
 const ansibleVaultTxt string = "$ANSIBLE_VAULT;"
 
@@ -66,7 +67,9 @@ func CreateOutputFromIntermediate(input, output string) error {
 			lastLineToWrite := lastLine
 			if strings.Contains(line, ansibleVaultTxt) {
 				// line after the line break indicates a vault
-				lastLineToWrite = strings.Replace(lastLine, lineBreak, ansibleLineBreak, 1)
+				if !strings.Contains(lastLine, vaultStr) {
+					lastLineToWrite = strings.Replace(lastLine, lineBreak, ansibleLineBreak, 1)
+				}
 				lastLine = ""
 			}
 			if _, err := writer.WriteString(lastLineToWrite + "\n"); err != nil {

@@ -12,9 +12,17 @@ var DecryptCmd = &cobra.Command{
 	Short: "Decrypts a partial encoded JSON or YAML file",
 	Long:  "Decrypts a partial Ansible vault encoded JSON or YAML file",
 	Run: func(cmd *cobra.Command, args []string) {
+		if output == "" {
+			if overwrite {
+				output = input
+			} else {
+				fmt.Println("No output file or overwrite flag given, cancel.")
+				return
+			}
+		}
+
 		if interactive {
 			decrypt.DecryptInteractive(input, output, password, keys)
-
 		} else {
 			if err := decrypt.Decrypt(input, output, password, keys); err != nil {
 				fmt.Println("an error occurred: ", err)

@@ -13,7 +13,16 @@ var EncryptCmd = &cobra.Command{
 	Short: "Partial encrypts a JSON or YAML file",
 	Long:  "Partial encrypts a JSON or YAML file in a Ansible vault compatible way",
 	Run: func(cmd *cobra.Command, args []string) {
-		outputFileToUse := output
+		var outputFileToUse string
+		if overwrite {
+			outputFileToUse = input
+		} else {
+			if output == "" {
+				fmt.Println("No output file or overwrite flag given, cancel.")
+				return
+			}
+			outputFileToUse = output
+		}
 		needTmpIntermediateFile := false
 		if ansibleUse {
 			// adjust the output file for Ansible

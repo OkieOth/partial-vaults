@@ -1,6 +1,7 @@
 package encrypt_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -20,27 +21,20 @@ func TestEncryptYaml(t *testing.T) {
 		password   string
 		keys       []string
 	}{
-		// {
-		// 	inputFile:     "../../resources/tests/example.yaml",
-		// 	outputFile:    "../../temp/example_encrypted_01.yaml",
-		// 	tmpFile:       "../../temp/example_encrypted_tmp_01.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{},
-		// },
-		// {
-		// 	inputFile:     "../../resources/tests/example.yaml",
-		// 	outputFile:    "../../temp/example_encrypted_03.yaml",
-		// 	tmpFile:       "../../temp/example_encrypted_tmp_03.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{"third.carrot"},
-		// },
-		// {
-		// 	inputFile:     "../../resources/tests/partial_encrypted_example.yaml",
-		// 	outputFile:    "../../temp/partial_encrypted_example_decrypted_04.yaml",
-		// 	tmpFile:       "../../temp/partial_encrypted_example_decrypted_04_02.yaml",
-		// 	password:      "test999",
-		// 	keys:          []string{"first.a", "first.z", "second.b.2", "fourth.list"},
-		// },
+		{
+			inputFile:  "../../resources/tests/example.yaml",
+			outputFile: "../../temp/example_encrypted_01.yaml",
+			tmpFile:    "../../temp/example_encrypted_tmp_01.yaml",
+			password:   "test999",
+			keys:       []string{},
+		},
+		{
+			inputFile:  "../../resources/tests/example.yaml",
+			outputFile: "../../temp/example_encrypted_03.yaml",
+			tmpFile:    "../../temp/example_encrypted_tmp_03.yaml",
+			password:   "test999",
+			keys:       []string{"third.carrot"},
+		},
 		{
 			inputFile:  "../../resources/tests/example.yaml",
 			outputFile: "../../temp/example_encrypted_01_02.yaml",
@@ -49,7 +43,7 @@ func TestEncryptYaml(t *testing.T) {
 			keys:       []string{},
 		},
 	}
-	for _, test := range tests {
+	for i, test := range tests {
 		if _, err := os.Stat(test.outputFile); err == nil {
 			// file exists
 			os.Remove(test.outputFile)
@@ -67,7 +61,7 @@ func TestEncryptYaml(t *testing.T) {
 		require.Nil(t, err)
 		inputYaml, err := yamlreader.ReadYAML(test.inputFile)
 		require.Nil(t, err)
-		require.Equal(t, inputYaml, outputYaml, "yaml: encrypted + decrypted doesn't mach input")
+		require.Equal(t, inputYaml, outputYaml, fmt.Sprintf("yaml (%d): encrypted + decrypted doesn't mach input", i))
 	}
 }
 

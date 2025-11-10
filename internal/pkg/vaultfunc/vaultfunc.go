@@ -9,6 +9,8 @@ import (
 	vault "github.com/sosedoff/ansible-vault-go"
 )
 
+const ansibleVaultStr string = "$ANSIBLE_VAULT"
+
 func Encrypt(value any, valueType types.ValueType, password string) (string, error) {
 	var strValue string
 	switch valueType {
@@ -22,6 +24,9 @@ func Encrypt(value any, valueType types.ValueType, password string) (string, err
 		strValue = fmt.Sprintf("%s", value)
 	default:
 		return "", fmt.Errorf("value type isn't supported for encryption: %s", valueType)
+	}
+	if strings.Contains(strValue, ansibleVaultStr) {
+		return strValue, nil
 	}
 	return vault.Encrypt(strValue, password)
 }
