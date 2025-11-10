@@ -53,6 +53,11 @@ func TestCreateOutputFromIntermediate(t *testing.T) {
 			output:    "../../temp/example_changes.yaml",
 			reference: "../../resources/tests/example_changes_ref.yaml",
 		},
+		{
+			input:     "../../temp/example_changes.yaml",
+			output:    "../../temp/example_changes_02.yaml",
+			reference: "../../resources/tests/example_changes_ref.yaml",
+		},
 	}
 
 	for i, test := range tests {
