@@ -2,6 +2,12 @@
 [![go report card](https://goreportcard.com/badge/github.com/OkieOth/partial-vaults)](https://goreportcard.com/report/github.com/OkieOth/partial-vaults)
 [![GitHub release](https://img.shields.io/github/v/release/OkieOth/partial-vaults?label=Docker%20Image&style=flat-square)](https://github.com/OkieOth/partial-vaults/releases)
 
+# Important
+This repo is no longer maintained. If you like the functionality. Then you find here a non breaking
+more feature rich replacement.
+
+https://codeberg.org/okieoth/rvault
+
 # partial-vaults
 
 A tool to encrypt or decrypt JSON or YAML files that contain partial Ansible vault encrypted values.
